@@ -85,7 +85,7 @@ describe('typeName works correctly', () => {
 
   test('typeName for functions', () => {
     const func = 'function'
-    const value = (..._: any[]): any => {}
+    const value = (..._: any[]): any => { /* dummy for test */ }
     expectTypeOf(value).toBeFunction()
     expect(typeName(value)).toBe(func)
   })

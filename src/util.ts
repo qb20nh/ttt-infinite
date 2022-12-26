@@ -61,6 +61,9 @@ export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: A
   }
 
   const getter = (): Nullable<V> => {
+    if (!defaultValueHolder.assigned) {
+      throw new Error('Cannot get value since none was ever set')
+    }
     return value ?? getDefaultValue(defaultValueHolder)
   }
   return [setter, getter]
