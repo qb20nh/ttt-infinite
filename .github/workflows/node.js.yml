@@ -26,6 +26,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache: pnpm
 
     - name: Setup pnpm
       uses: pnpm/action-setup@v2.2.4
@@ -44,6 +45,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
 
-    - run: pnpm ci
+    - run: pnpm install
     - run: pnpm run test
     - run: pnpm run build --if-present
