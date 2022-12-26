@@ -1,5 +1,5 @@
 import { test, expect, describe, expectTypeOf } from 'vitest'
-import { createVariable, typeName } from '../src/util'
+import { createVariable, typeName } from '../src/utils/common'
 
 describe('typeName works correctly', () => {
   test('typeName is function', () => {

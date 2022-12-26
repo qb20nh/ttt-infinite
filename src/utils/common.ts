@@ -1,4 +1,4 @@
-import { Nullable } from "vitest"
+import { Nullable } from 'vitest'
 
 type Getter<T> = () => T
 type Setter<T> = (..._: OptionalSingleTuple<T>) => void

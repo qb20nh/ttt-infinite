@@ -4,7 +4,7 @@ import { createVariable } from './utils/common'
 const appElement = document.querySelector < HTMLDivElement >('#app')!
 
 appElement.append(
-  GameBoard as unknown as Node
+  GameBoard
 )
 
 const [setNum, getNum] = createVariable(-1)

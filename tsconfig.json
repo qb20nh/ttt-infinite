@@ -18,5 +18,5 @@
     "jsxImportSource": "tsx-dom",
     "strictNullChecks": true,
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "*.config.ts"]
 }
