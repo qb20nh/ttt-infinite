@@ -6,10 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest watch",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@vitest/coverage-c8": "^0.26.2",
+    "dom-chef": "^5.1.0",
+    "happy-dom": "^8.1.1",
+    "ts-standard": "^12.0.2",
     "typescript": "^4.9.3",
-    "vite": "^4.0.0"
+    "vite": "^4.0.0",
+    "vitest": "^0.26.2",
+    "vitest-github-actions-reporter": "^0.9.0"
   }
 }

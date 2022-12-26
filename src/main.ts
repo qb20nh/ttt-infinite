@@ -1,3 +1,9 @@
-const appElement = document.querySelector<HTMLDivElement>('#app')
+import './util'
+// eslint-disable-next-line
+const appElement = document.querySelector < HTMLDivElement >('#app')!
 
-export const createVariable = () => {}
+appElement.innerHTML = `
+Hello World
+`
+
+export const createVariable = (): void => {}

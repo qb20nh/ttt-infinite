@@ -15,7 +15,8 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "jsxFragmentFactory": "Fragment",
+    "strictNullChecks": true,
   },
-  "include": ["src"]
+  "include": ["src", "test"]
 }
