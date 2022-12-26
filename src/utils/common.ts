@@ -1,8 +1,9 @@
+import { Nullable } from "vitest"
+
 type Getter<T> = () => T
 type Setter<T> = (..._: OptionalSingleTuple<T>) => void
 type SingleTuple<T = unknown> = [T]
 type OptionalSingleTuple<T = unknown> = SingleTuple<T> | []
-type Nullable<T> = T | undefined | null
 
 export const typeName = (...args: SingleTuple): string => Object.prototype.toString.call(args[0]).slice(8, -1).toLowerCase()
 
@@ -68,7 +69,3 @@ export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: A
   }
   return [setter, getter]
 }
-
-export const q = <ExpectedElement extends Element>(queryString: string): Nullable<ExpectedElement> => document.querySelector<ExpectedElement>(queryString)
-
-console.log('hey')

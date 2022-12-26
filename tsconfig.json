@@ -14,9 +14,9 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment",
+    "jsx": "react-jsx",
+    "jsxImportSource": "tsx-dom",
     "strictNullChecks": true,
   },
-  "include": ["src", "test"]
+  "include": ["src", "tests"]
 }
