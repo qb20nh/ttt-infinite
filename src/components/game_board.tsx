@@ -2,7 +2,7 @@ import { Board } from '../controller/board'
 import { component } from '../utils/types'
 
 const gameState = {
-  board: new Board(),
+  board: new Board({ maxLevel: 3 }),
   currentTurn: 0,
   currentLevel: 0
 }
