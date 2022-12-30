@@ -84,11 +84,11 @@ export class BoardState {
     return player(null)
   }
 
-  protected canDoMove (): boolean {
+  #canDoMove (): boolean {
     if (this.#wonBy !== null || this.#filled) {
       return false
     } else {
-      const filled = this.#children.some(row => row.some(state => state.canDoMove()))
+      const filled = this.#children.some(row => row.some(state => state.#canDoMove()))
       if (!filled) {
         this.#filled = true
       }
