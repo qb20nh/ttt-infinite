@@ -18,13 +18,13 @@
     "happy-dom": "^8.1.1",
     "ts-standard": "^12.0.2",
     "ts-toolbelt": "^9.6.0",
+    "tsx-dom": "^2.0.0",
+    "tsx-dom-types": "^1.0.0",
     "typescript": "^4.9.3",
+    "utils-decorators": "^2.0.5",
     "vite": "^4.0.0",
     "vitest": "^0.26.2",
     "vitest-github-actions-reporter": "^0.9.0"
   },
-  "packageManager": "pnpm@7.18.2",
-  "dependencies": {
-    "tsx-dom": "^2.0.0"
-  }
+  "packageManager": "pnpm@7.18.2"
 }

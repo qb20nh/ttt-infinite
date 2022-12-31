@@ -8,13 +8,17 @@ specifiers:
   ts-standard: ^12.0.2
   ts-toolbelt: ^9.6.0
   tsx-dom: ^2.0.0
+  tsx-dom-types: ^1.0.0
   typescript: ^4.9.3
+  utils-decorators: ^2.0.5
   vite: ^4.0.0
   vitest: ^0.26.2
   vitest-github-actions-reporter: ^0.9.0
 
 dependencies:
-  tsx-dom: 2.0.0
+  tsx-dom: 2.0.0_tsx-dom-types@1.0.0
+  tsx-dom-types: 1.0.0
+  utils-decorators: 2.0.5
 
 devDependencies:
   '@types/react': 18.0.26
@@ -2365,6 +2369,10 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: true
 
+  /tinyqueue/2.0.3:
+    resolution: {integrity: sha512-ppJZNDuKGgxzkHihX8v9v9G5f+18gzaTfrukGrq6ueg0lmH4nqVnA2IPG0AEH3jKEk2GRJCUhDoqpoiw3PHLBA==}
+    dev: false
+
   /tinyspy/1.0.2:
     resolution: {integrity: sha512-bSGlgwLBYf7PnUsQ6WOc6SJ3pGOcd+d8AA6EUnLDDM0kWEstC1JIlSZA3UNliDXhd9ABoS7hiRBDCu+XP/sf1Q==}
     engines: {node: '>=14.0.0'}
@@ -2434,9 +2442,15 @@ packages:
       typescript: 4.9.4
     dev: true
 
-  /tsx-dom/2.0.0:
+  /tsx-dom-types/1.0.0:
+    resolution: {integrity: sha512-4r4IDcoRpfOQXs5skl74EQBCDAMP27+xHziFT1Yq0DgVn99p9GcY6x7B3E4dX+PxvlzT0FKFgMeSqXd2VeWh+Q==}
+    dev: false
+
+  /tsx-dom/2.0.0_tsx-dom-types@1.0.0:
     resolution: {integrity: sha512-KfaZIu3UN1DuuUPih67UaDvI2UvneOG8ooUZ64+oC3OuZ3duoIJsvn/WomYMQODsok0tizg+MS0aff9BZnexpg==}
     peerDependencies:
+      tsx-dom-types: 1.0.0
+    dependencies:
       tsx-dom-types: 1.0.0
     dev: false
 
@@ -2491,6 +2505,12 @@ packages:
     dependencies:
       punycode: 2.1.1
     dev: true
+
+  /utils-decorators/2.0.5:
+    resolution: {integrity: sha512-iraFZ99JeVQz9nxkXOfrk+R1izg00CpIFcnEWqwEnXve54dPGFkV47hr9KR9SbnB/LhnKvf+L0ieHD3tam0lFg==}
+    dependencies:
+      tinyqueue: 2.0.3
+    dev: false
 
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
