@@ -20,9 +20,9 @@
     "ts-toolbelt": "^9.6.0",
     "tsx-dom": "^2.0.0",
     "tsx-dom-types": "^1.0.0",
-    "typescript": "^4.9.3",
+    "typescript": "^4.9.4",
     "utils-decorators": "^2.0.5",
-    "vite": "^4.0.0",
+    "vite": "^4.0.3",
     "vitest": "^0.26.2",
     "vitest-github-actions-reporter": "^0.9.0"
   },
