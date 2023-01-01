@@ -1,0 +1,10 @@
+repos:
+-   repo: local
+    hooks:
+    - id: ts-standard
+      name: ts-standard
+      entry: pnpm ts-standard --fix
+      language: node
+      files: "\\.(\
+        ts|tsx\
+        )$"
