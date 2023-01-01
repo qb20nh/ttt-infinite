@@ -69,3 +69,17 @@ export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: A
   }
   return [setter, getter]
 }
+
+export const indexOf = (arr: unknown[], value: unknown): number[] => {
+  let result: number[] = [-1]
+  arr.some(function iter (path: number[]): (a: unknown, i: number) => boolean {
+    return function (a, i) {
+      if (a === value) {
+        result = path.concat(i)
+        return true
+      };
+      return Array.isArray(a) && a.some(iter(path.concat(i)))
+    }
+  }([]))
+  return result
+}
