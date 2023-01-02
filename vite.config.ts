@@ -17,12 +17,17 @@ export default defineConfig({
   plugins: [
     VitePWA(),
     VitePluginBrowserSync(),
-    tauri() // 2. add it to the plugins list
+    ...(process.env.GITHUB_ACTIONS === undefined ? [tauri()] : [])
   ],
 
   // 3. optional but recommended
-  clearScreen: false,
-  server: {
-    open: false
-  }
+
+  ...(process.env.GITHUB_ACTIONS === undefined
+    ? {
+        clearScreen: false,
+        server: {
+          open: false
+        }
+      }
+    : {})
 })
