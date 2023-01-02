@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import { VitePWA } from 'vite-plugin-pwa'
+import { tauri } from 'vite-plugin-tauri' // 1. import the plugin
+import VitePluginBrowserSync from 'vite-plugin-browser-sync'
 
 export default defineConfig({
   esbuild: {
@@ -10,5 +13,16 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src')
     }
+  },
+  plugins: [
+    VitePWA(),
+    VitePluginBrowserSync(),
+    tauri() // 2. add it to the plugins list
+  ],
+
+  // 3. optional but recommended
+  clearScreen: false,
+  server: {
+    open: false
   }
 })
