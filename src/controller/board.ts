@@ -1,5 +1,5 @@
 import { findPositionByDiagonalAndPosition } from '../utils/board'
-import { indexOf, Setter } from '../utils/common'
+import { indexOf } from '../utils/common'
 import { event } from '../utils/dom'
 import { Nullable } from '../utils/types'
 
@@ -31,21 +31,17 @@ export class BoardState {
     return new BoardState({
       level: other.level,
       parent: other.parent,
-      board: other.board,
-      setActiveState: other.#setActiveState
+      board: other.board
     })
   }
 
-  readonly #setActiveState: Setter<Nullable<BoardState>>
-
-  constructor ({ level, parent = null, board, setActiveState }: { level: number, parent?: Nullable<BoardState>, board: Board, setActiveState: Setter<Nullable<BoardState>> }) {
+  constructor ({ level, parent = null, board }: { level: number, parent?: Nullable<BoardState>, board: Board }) {
     this.level = level
     this.#wonBy = player.empty
     this.parent = parent
     this.#filled = false
     this.board = board
     this.children = this.#generateChildren()
-    this.#setActiveState = setActiveState
   }
 
   get width (): number {
@@ -60,7 +56,7 @@ export class BoardState {
     if (this.level > 0) {
       return Array.from(Array(this.height)).map(_ =>
         Array.from(Array(this.width)).map(_ =>
-          new BoardState({ level: this.level - 1, parent: this, board: this.board, setActiveState: this.#setActiveState })
+          new BoardState({ level: this.level - 1, parent: this, board: this.board })
         )
       )
     } else {
@@ -95,7 +91,7 @@ export class BoardState {
       const [row, col] = indexOf(this.parent.children!, this)
       if (this.parent.parent !== null) {
         const activeState = this.parent.parent.children![row][col]
-        this.#setActiveState(activeState)
+        this.board.activeState = activeState
         activeState.#afterUpdateActive()
       }
       /* eslint-enable @typescript-eslint/no-non-null-assertion */
@@ -104,9 +100,9 @@ export class BoardState {
 
   #afterUpdateActive (): void {
     if (!this.canDoMove) {
-      this.#setActiveState(null)
+      this.board.activeState = null
       if (this.parent !== null) {
-        this.#setActiveState(this.parent)
+        this.board.activeState = this.parent
         this.parent.#afterUpdateActive()
       }
     }
@@ -273,11 +269,18 @@ export class BoardState {
   fill (): void {
     const player = this.board.turn
     if (player !== null) {
-      if (this.canFill) {
+      if (this.canFill && this.hasActiveAncestor) {
         this.#updateAncestorWonBy(player)
         this.board.nextTurn()
       }
     }
+  }
+
+  get hasActiveAncestor (): boolean {
+    if (this.parent === null) {
+      return this.isActive
+    }
+    return this.isActive || this.parent.hasActiveAncestor
   }
 
   #updateAncestorWonBy (placed: Player): void {
@@ -295,7 +298,7 @@ export class Board {
   readonly maxLevel: number
 
   readonly rootState: BoardState
-  #activeState: Nullable<BoardState>
+  activeState: Nullable<BoardState>
   turn: Player = player.empty
 
   #renderCallback: Nullable<Function> = null
@@ -306,16 +309,9 @@ export class Board {
     this.maxLevel = maxLevel
     this.rootState = new BoardState({
       level: maxLevel,
-      board: this,
-      setActiveState: (newState: Nullable<BoardState>) => {
-        this.#activeState = newState
-      }
+      board: this
     })
-    this.#activeState = this.rootState
-  }
-
-  get activeState (): Nullable<BoardState> {
-    return this.#activeState
+    this.activeState = this.rootState
   }
 
   setRenderCallback (fn: Function): void {

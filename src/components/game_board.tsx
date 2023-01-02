@@ -70,6 +70,9 @@ export const GameBoard = component(
           --bg: #e0e0e0;
           background: var(--bg);
         }
+        .cell.active .cell:empty {
+          cursor: pointer;
+        }
         .cell.active .cell:empty:before {
           --bg: #ff8;
         }
