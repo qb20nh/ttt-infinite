@@ -1,21 +1,23 @@
-type Getter<T> = () => T
-type Setter<T> = (..._: OptionalSingleTuple<T>) => void
+import { NotDefined } from './types'
+
+export type Getter<T> = () => T
+export type OptionalSetter<T> = (..._: OptionalSingleTuple<T>) => void
+export type Setter<T> = (newValue: T) => void
 type SingleTuple<T = unknown> = [T]
 type OptionalSingleTuple<T = unknown> = SingleTuple<T> | []
-type Nullable<T> = T | undefined | null
 
 export const typeName = (...args: SingleTuple): string => Object.prototype.toString.call(args[0]).slice(8, -1).toLowerCase()
 
-interface ValueHolder<A, V, T extends Nullable<string>> { assigned: A, value: V, type: T }
+interface ValueHolder<A, V, T extends NotDefined<string>> { assigned: A, value: V, type: T }
 type AssignedValueHolder<V> = ValueHolder<true, V, string>
 type LateValueHolder = ValueHolder<false, undefined, undefined>
 type DefaultValueHolder<V> = AssignedValueHolder<V> | LateValueHolder
 
-const getDefaultValue = <T>(holder: DefaultValueHolder<T>): Nullable<T> => {
+const getDefaultValue = <T>(holder: DefaultValueHolder<T>): NotDefined<T> => {
   return holder.assigned ? holder.value : undefined
 }
 
-export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: Arg): [Setter<V>, Getter<Nullable<V>>] => {
+export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: Arg): [OptionalSetter<V>, Getter<NotDefined<V>>] => {
   const late = args.length === 0
   const defaultValueHolder: DefaultValueHolder<V> = late
     ? {
@@ -60,7 +62,7 @@ export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: A
     }
   }
 
-  const getter = (): Nullable<V> => {
+  const getter = (): NotDefined<V> => {
     if (!defaultValueHolder.assigned) {
       throw new Error('Cannot get value since none was ever set')
     }
@@ -69,6 +71,16 @@ export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: A
   return [setter, getter]
 }
 
-export const q = <ExpectedElement extends Element>(queryString: string): Nullable<ExpectedElement> => document.querySelector<ExpectedElement>(queryString)
-
-console.log('hey')
+export const indexOf = (arr: unknown[], value: unknown): number[] => {
+  let result: number[] = [-1]
+  arr.some(function iter (path: number[]): (a: unknown, i: number) => boolean {
+    return function (a, i) {
+      if (a === value) {
+        result = path.concat(i)
+        return true
+      };
+      return Array.isArray(a) && a.some(iter(path.concat(i)))
+    }
+  }([]))
+  return result
+}

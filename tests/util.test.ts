@@ -1,5 +1,5 @@
-import { test, expect, describe, expectTypeOf } from 'vitest'
-import { createVariable, typeName } from '../src/util'
+import { describe, expect, expectTypeOf, test } from 'vitest'
+import { createVariable, indexOf, typeName } from '../src/utils/common'
 
 describe('typeName works correctly', () => {
   test('typeName is function', () => {
@@ -169,5 +169,37 @@ describe('createVariable works correctly', () => {
     expect(getNum()).toBe(newValue)
     expect(() => setNum()).not.toThrow()
     expect(getNum()).toBe(defaultValue)
+  })
+})
+
+describe('indexOf works correctly', () => {
+  test('is a function', () => {
+    expectTypeOf(indexOf).toBeFunction()
+  })
+
+  test('flat array', () => {
+    const arr = [1, 2, 3, 4, 5]
+    expect(indexOf(arr, 0)).toEqual([-1])
+    expect(indexOf(arr, 3)).toEqual([2])
+    expect(indexOf(arr, 5)).toEqual([4])
+    expect(indexOf(arr, 6)).toEqual([-1])
+  })
+
+  test('nested array', () => {
+    const arr = [1, [2, 3], 4, [5, 6, 7], 8]
+    expect(indexOf(arr, 0)).toEqual([-1])
+    expect(indexOf(arr, 1)).toEqual([0])
+    expect(indexOf(arr, 2)).toEqual([1, 0])
+    expect(indexOf(arr, 3)).toEqual([1, 1])
+    expect(indexOf(arr, 4)).toEqual([2])
+    expect(indexOf(arr, 5)).toEqual([3, 0])
+    expect(indexOf(arr, 6)).toEqual([3, 1])
+    expect(indexOf(arr, 7)).toEqual([3, 2])
+    expect(indexOf(arr, 8)).toEqual([4])
+  })
+
+  test('deeply nested', () => {
+    const arr = [[[[1]]]]
+    expect(indexOf(arr, 1)).toEqual([0, 0, 0, 0])
   })
 })

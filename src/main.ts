@@ -1,9 +1,7 @@
-import './util'
+import { GameBoard } from './components/game_board'
 // eslint-disable-next-line
-const appElement = document.querySelector < HTMLDivElement >('#app')!
+const appElement = document.querySelector<HTMLDivElement>('#app')!
 
-appElement.innerHTML = `
-Hello World
-`
-
-export const createVariable = (): void => {}
+appElement.append(
+  GameBoard
+)
