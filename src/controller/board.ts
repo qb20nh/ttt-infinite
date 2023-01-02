@@ -1,5 +1,6 @@
 import { findPositionByDiagonalAndPosition } from '../utils/board'
-import { indexOf } from '../utils/common'
+import { indexOf, Setter } from '../utils/common'
+import { event } from '../utils/dom'
 import { Nullable } from '../utils/types'
 
 const O = 'O'
@@ -25,23 +26,26 @@ export class BoardState {
   readonly parent: Nullable<BoardState>
   #filled: boolean
   readonly board: Board
-  #active: boolean = false
 
   static clone (other: BoardState): BoardState {
     return new BoardState({
       level: other.level,
       parent: other.parent,
-      board: other.board
+      board: other.board,
+      setActiveState: other.#setActiveState
     })
   }
 
-  constructor ({ level, parent = null, board }: { level: number, parent?: Nullable<BoardState>, board: Board }) {
+  readonly #setActiveState: Setter<Nullable<BoardState>>
+
+  constructor ({ level, parent = null, board, setActiveState }: { level: number, parent?: Nullable<BoardState>, board: Board, setActiveState: Setter<Nullable<BoardState>> }) {
     this.level = level
     this.#wonBy = player.empty
     this.parent = parent
     this.#filled = false
     this.board = board
-    this.children = this.#generateChildStates()
+    this.children = this.#generateChildren()
+    this.#setActiveState = setActiveState
   }
 
   get width (): number {
@@ -52,11 +56,11 @@ export class BoardState {
     return this.board.height
   }
 
-  #generateChildStates (): Nullable<BoardState[][]> {
+  #generateChildren (): Nullable<BoardState[][]> {
     if (this.level > 0) {
       return Array.from(Array(this.height)).map(_ =>
         Array.from(Array(this.width)).map(_ =>
-          new BoardState({ level: this.level - 1, parent: this, board: this.board })
+          new BoardState({ level: this.level - 1, parent: this, board: this.board, setActiveState: this.#setActiveState })
         )
       )
     } else {
@@ -68,14 +72,14 @@ export class BoardState {
     if (this.#wonBy !== null || this.level === 0 || this.#filled) {
       return this.#wonBy
     } else {
-      return this.#updateIsWonBy()
+      return this.#updateIsWonBy(player.empty)
     }
   }
 
-  #updateIsWonBy (): Player {
+  #updateIsWonBy (placed: Player): Player {
     const previousWonBy = this.#wonBy
     if (previousWonBy === null) {
-      const wonBy = this.#computeIsWonBy()
+      const wonBy = this.level === 0 ? placed : this.#computeIsWonBy()
       if (wonBy !== null) {
         this.#wonBy = wonBy
         this.#updateActive()
@@ -90,8 +94,9 @@ export class BoardState {
       /* eslint-disable @typescript-eslint/no-non-null-assertion */
       const [row, col] = indexOf(this.parent.children!, this)
       if (this.parent.parent !== null) {
-        this.parent.parent.children![row][col].#active = true
-        this.parent.parent.children![row][col].#afterUpdateActive()
+        const activeState = this.parent.parent.children![row][col]
+        this.#setActiveState(activeState)
+        activeState.#afterUpdateActive()
       }
       /* eslint-enable @typescript-eslint/no-non-null-assertion */
     }
@@ -99,16 +104,16 @@ export class BoardState {
 
   #afterUpdateActive (): void {
     if (!this.canDoMove) {
-      this.#active = false
+      this.#setActiveState(null)
       if (this.parent !== null) {
-        this.parent.#active = true
+        this.#setActiveState(this.parent)
         this.parent.#afterUpdateActive()
       }
     }
   }
 
   get isActive (): boolean {
-    return this.#active
+    return this.board.activeState === this
   }
 
   #computeIsWonBy (): Player {
@@ -252,7 +257,7 @@ export class BoardState {
   }
 
   get canFill (): boolean {
-    if (this.level === 0 && this.#wonBy !== null) {
+    if (this.#wonBy === null && !this.#filled) {
       return this.#parentAllowsFill
     }
     return false
@@ -260,23 +265,26 @@ export class BoardState {
 
   get #parentAllowsFill (): boolean {
     if (this.parent === null) {
-      return this.#filled
+      return !this.#filled
     }
     return this.parent.canDoMove && this.parent.#parentAllowsFill
   }
 
-  fill (player: Player): void {
-    if (this.canFill) {
-      this.#wonBy = player
-      this.#updateAncestorWonBy()
+  fill (): void {
+    const player = this.board.turn
+    if (player !== null) {
+      if (this.canFill) {
+        this.#updateAncestorWonBy(player)
+        this.board.nextTurn()
+      }
     }
   }
 
-  #updateAncestorWonBy (): void {
-    this.#updateIsWonBy()
+  #updateAncestorWonBy (placed: Player): void {
+    this.#updateIsWonBy(placed)
     this.#updateFilled()
     if (this.parent !== null) {
-      this.parent.#updateAncestorWonBy()
+      this.parent.#updateAncestorWonBy(placed)
     }
   }
 }
@@ -287,22 +295,42 @@ export class Board {
   readonly maxLevel: number
 
   readonly rootState: BoardState
-
+  #activeState: Nullable<BoardState>
   turn: Player = player.empty
+
+  #renderCallback: Nullable<Function> = null
 
   constructor ({ width, height, maxLevel }: { width: number, height: number, maxLevel: number }) {
     this.width = width
     this.height = height
     this.maxLevel = maxLevel
-    this.rootState = new BoardState({ level: maxLevel, board: this })
+    this.rootState = new BoardState({
+      level: maxLevel,
+      board: this,
+      setActiveState: (newState: Nullable<BoardState>) => {
+        this.#activeState = newState
+      }
+    })
+    this.#activeState = this.rootState
+  }
+
+  get activeState (): Nullable<BoardState> {
+    return this.#activeState
+  }
+
+  setRenderCallback (fn: Function): void {
+    this.#renderCallback = fn
   }
 
   startTurn (p: Player): void {
     this.turn = p
   }
 
-  log (): void {
-    console.log(`${this.width}x${this.height}@${this.maxLevel}`)
+  nextTurn (): void {
+    if (this.turn !== player.empty) {
+      this.turn = this.turn === player.o ? player.x : player.o
+      this.#renderCallback?.()
+    }
   }
 }
 
@@ -324,8 +352,10 @@ export class BoardRenderer extends ObjectRenderer<Board> {
 
   #renderPartial (intermediate: BoardState): Element {
     const out = document.createElement('div')
-    if (intermediate.canFill) {
-      out.classList.add('playing')
+    out.classList.add('cell')
+    out.classList.add(`level${intermediate.level}`)
+    if (!intermediate.canFill) {
+      out.classList.add('filled')
     }
     if (intermediate.isWonBy !== null) {
       out.classList.add('won')
@@ -333,6 +363,11 @@ export class BoardRenderer extends ObjectRenderer<Board> {
     }
     if (intermediate.isActive) {
       out.classList.add('active')
+    }
+    if (intermediate.level === 0) {
+      event(out, 'click', (_) => {
+        intermediate.fill()
+      })
     }
     if (intermediate.level > 0) {
       out.append(...(intermediate.children?.flatMap(state => state).map(state => this.#renderPartial(state)) ?? []))

@@ -1,7 +1,8 @@
 import { Nullable } from 'vitest'
 
-type Getter<T> = () => T
-type Setter<T> = (..._: OptionalSingleTuple<T>) => void
+export type Getter<T> = () => T
+export type OptionalSetter<T> = (..._: OptionalSingleTuple<T>) => void
+export type Setter<T> = (newValue: T) => void
 type SingleTuple<T = unknown> = [T]
 type OptionalSingleTuple<T = unknown> = SingleTuple<T> | []
 
@@ -16,7 +17,7 @@ const getDefaultValue = <T>(holder: DefaultValueHolder<T>): Nullable<T> => {
   return holder.assigned ? holder.value : undefined
 }
 
-export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: Arg): [Setter<V>, Getter<Nullable<V>>] => {
+export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: Arg): [OptionalSetter<V>, Getter<Nullable<V>>] => {
   const late = args.length === 0
   const defaultValueHolder: DefaultValueHolder<V> = late
     ? {

@@ -2,6 +2,8 @@ import { N } from 'ts-toolbelt'
 
 export type CommonNode = JSX.Element & Node
 export const component = (element: JSX.Element): CommonNode => element as CommonNode
+export type CommonElement = JSX.Element & Element
+export const element = (element: JSX.Element): CommonElement => element as CommonElement
 
 type _IntegerRange<From extends number, To extends number, Range = N.Range<From, To>> = Range[keyof Range & number]
 export type IntegerRange<From extends number, To extends number> = _IntegerRange<From, To>
