@@ -56,3 +56,4 @@ jobs:
         BRANCH: gh-pages
         FOLDER: dist
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CLEAR_GLOBS_FILE: ".github/.clear-target-files"
