@@ -10,6 +10,7 @@
     "test": "vitest",
     "test:watch": "vitest watch",
     "coverage": "vitest run --coverage",
+    "ci:coverage": "vitest run --coverage && mkdir -p dist && rm -r dist/coverage && mv coverage dist",
     "dev:tauri": "vite --config vite.tauri.config.ts",
     "build:tauri": "tsc && vite build --config vite.tauri.config.ts"
   },
