@@ -11,6 +11,7 @@
     "test:watch": "vitest watch",
     "coverage": "vitest run --coverage",
     "ci:coverage": "vitest run --coverage && mkdir -p dist && rm -rf dist/coverage && mv coverage dist",
+    "ci:afterBuild": "scripts/add_empty_front_matter.sh dist/index.html",
     "dev:tauri": "vite --config vite.tauri.config.ts",
     "build:tauri": "tsc && vite build --config vite.tauri.config.ts"
   },
