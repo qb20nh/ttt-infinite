@@ -5,6 +5,7 @@ import { tauri } from 'vite-plugin-tauri' // 1. import the plugin
 import VitePluginBrowserSync from 'vite-plugin-browser-sync'
 
 export default defineConfig({
+  base: './',
   esbuild: {
     jsxImportSource: 'tsx-dom',
     jsxInject: 'import { h } from \'tsx-dom\''
