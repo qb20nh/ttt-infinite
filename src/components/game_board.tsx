@@ -1,34 +1,66 @@
-import { Board, BoardRenderer, player } from '../controller/board'
-import { q } from '../utils/dom'
-import { CommonElement, component } from '../utils/types'
+import { Board, BoardRenderer } from '@/controller/board/'
+import { player } from '@/controller/types'
+import { q } from '@/utils/dom'
+import { CommonElement, component, Nullable } from '@/utils/types'
+import { compressToUTF16, decompressFromUTF16 } from 'lz-string'
+import { deserialize, serialize } from 'serializr'
 
 const gameState = {
-  board: new Board({ width: 3, height: 3, maxLevel: 3 }),
+  board: new Board(3, 3, 3),
   currentTurn: 0,
   currentLevel: 0
 }
+
+const renderer = new BoardRenderer()
+
+const key = 'savedData'
+
+const load = (): Nullable<Board> => {
+  const savedDataCompressed = localStorage.getItem(key)
+  if (savedDataCompressed === null) return null
+  const savedData = decompressFromUTF16(savedDataCompressed)
+  if (savedData === null) return null
+  const parsed = JSON.parse(savedData)
+  const loadedGameState = deserialize(Board, parsed as Board)
+  return loadedGameState
+}
+
+const save = (state: Board): void => {
+  const pojo = serialize(state)
+  const stringified = JSON.stringify(pojo)
+  const compressed = compressToUTF16(stringified)
+  localStorage.setItem(key, compressed)
+}
+
+gameState.board.startTurn(player.o)
+
+const loaded = load()
+if (loaded != null) {
+  gameState.board = loaded
+} else {
+  gameState.board.startTurn(player.o)
+}
+
+renderer.setRenderObject(gameState.board)
 
 const id = 'board'
 
 const boardElement = (
   <div id={id}>
     {
-    (() => {
-      gameState.board.startTurn(player.o)
-      return (function draw () {
-        const renderer = new BoardRenderer(gameState.board)
-        gameState.board.setRenderCallback(() => {
-          q<HTMLDivElement>(`#${id}`)?.replaceChildren(draw())
-        })
-        return renderer.render<CommonElement>()
-      })()
-    })()
+     (function draw () {
+       gameState.board.setRenderCallback(() => {
+         q<HTMLDivElement>(`#${id}`)?.replaceChildren(draw())
+         save(gameState.board)
+       })
+       return renderer.render<CommonElement>()
+     }())
 }
   </div>
 )
 
 export const GameBoard = component(
-  <>
+  <div>
     <h1>
       TTT Infinite
     </h1>
@@ -87,5 +119,5 @@ export const GameBoard = component(
     {
       boardElement
     }
-  </>
+  </div>
 )

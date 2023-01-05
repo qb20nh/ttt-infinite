@@ -19,7 +19,7 @@ type DropFirst<T extends readonly unknown[]> = T extends readonly [any?, ...infe
 export type RepeatStringNonCross<T extends string, N extends number> = T extends infer A ? A extends string ? RepeatString<A, N> : never : never
 
 export type Nullable<T> = T | null
-export type NotDefined<T> = Nullable<T> | undefined
+export type Undefined<T> = Nullable<T> | undefined
 
 export type Integer<T extends number> = `${T}` extends `${number}.${number}` | `${number}e-${number}` | `${'' | '-'}Infinity` | 'NaN' ? never : T & { __type: 'Integer' }
 export const integer = <T extends number>(num: T): Integer<T> => {
@@ -28,3 +28,5 @@ export const integer = <T extends number>(num: T): Integer<T> => {
 export const isInteger = <T extends number>(num: T): num is Integer<T> => {
   return num % 1 === 0
 }
+
+export type HasKey<T> = { [_ in keyof T]: unknown }

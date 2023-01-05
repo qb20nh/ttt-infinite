@@ -1,4 +1,4 @@
-import { NotDefined } from './types'
+import { Undefined } from './types'
 
 export type Getter<T> = () => T
 export type OptionalSetter<T> = (..._: OptionalSingleTuple<T>) => void
@@ -8,16 +8,16 @@ type OptionalSingleTuple<T = unknown> = SingleTuple<T> | []
 
 export const typeName = (...args: SingleTuple): string => Object.prototype.toString.call(args[0]).slice(8, -1).toLowerCase()
 
-interface ValueHolder<A, V, T extends NotDefined<string>> { assigned: A, value: V, type: T }
+interface ValueHolder<A, V, T extends Undefined<string>> { assigned: A, value: V, type: T }
 type AssignedValueHolder<V> = ValueHolder<true, V, string>
 type LateValueHolder = ValueHolder<false, undefined, undefined>
 type DefaultValueHolder<V> = AssignedValueHolder<V> | LateValueHolder
 
-const getDefaultValue = <T>(holder: DefaultValueHolder<T>): NotDefined<T> => {
+const getDefaultValue = <T>(holder: DefaultValueHolder<T>): Undefined<T> => {
   return holder.assigned ? holder.value : undefined
 }
 
-export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: Arg): [OptionalSetter<V>, Getter<NotDefined<V>>] => {
+export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: Arg): [OptionalSetter<V>, Getter<Undefined<V>>] => {
   const late = args.length === 0
   const defaultValueHolder: DefaultValueHolder<V> = late
     ? {
@@ -62,7 +62,7 @@ export const createVariable = <Arg extends OptionalSingleTuple<V>, V>(...args: A
     }
   }
 
-  const getter = (): NotDefined<V> => {
+  const getter = (): Undefined<V> => {
     if (!defaultValueHolder.assigned) {
       throw new Error('Cannot get value since none was ever set')
     }
@@ -83,4 +83,12 @@ export const indexOf = (arr: unknown[], value: unknown): number[] => {
     }
   }([]))
   return result
+}
+
+const idMap: { [className: string]: number } = {}
+
+export const id = <T extends Function>(clazz: T): typeof idMap[keyof typeof idMap] => {
+  const next = (idMap[clazz.name] ?? 0) + 1
+  idMap[clazz.name] = next
+  return next
 }

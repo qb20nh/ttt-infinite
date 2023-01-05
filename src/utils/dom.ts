@@ -1,6 +1,6 @@
-import { Nullable } from 'vitest'
+import { Undefined } from './types'
 
-export const q = <ExpectedElement extends Element = Element>(queryString: string): Nullable<ExpectedElement> => document.querySelector<ExpectedElement>(queryString)
+export const q = <ExpectedElement extends Element = Element>(queryString: string): Undefined<ExpectedElement> => document.querySelector<ExpectedElement>(queryString)
 
 export const qa = <ExpectedElement extends Element = Element>(queryString: string): ExpectedElement[] => Array.from(document.querySelectorAll<ExpectedElement>(queryString))
 
