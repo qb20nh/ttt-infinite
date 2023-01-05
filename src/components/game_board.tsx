@@ -70,17 +70,19 @@ export const GameBoard = component(
           --bg: #e0e0e0;
           background: var(--bg);
         }
-        .cell.active .cell:empty {
+        .cell.active:not(:where(.filled, .won)) > .cell:empty,
+        .cell.active .cell:not(:where(.filled, .won)) .cell:empty {
           cursor: pointer;
         }
-        .cell.active .cell:empty:before {
+        .cell.active:not(:where(.filled, .won)) > .cell:empty:before,
+        .cell.active .cell:not(:where(.filled, .won)) .cell:empty:before {
           --bg: #ff8;
         }
         .cell.won.O:empty:before {
-          --bg: #f88;
+          --bg: #f88 !important;
         }
         .cell.won.X:empty:before {
-          --bg: #88f;
+          --bg: #88f !important;
         }
         `}
     </style>
