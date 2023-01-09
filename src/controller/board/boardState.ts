@@ -38,7 +38,7 @@ export class BoardState {
   }
 
   get __wonBy (): Player {
-    return this.isWonBy
+    return this.#wonBy
   }
 
   set __wonBy (p: Player) {
@@ -46,7 +46,7 @@ export class BoardState {
   }
 
   get __filled (): boolean {
-    return this.canFill
+    return this.#filled
   }
 
   set __filled (b: boolean) {

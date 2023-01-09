@@ -11,7 +11,8 @@ createModelSchema(Board, {
   height: primitive(),
   maxLevel: primitive(),
   rootState: object(BoardState),
-  activeState: reference(BoardState)
+  activeState: reference(BoardState),
+  turn: primitive()
 })
 
 createModelSchema(BoardState, {
