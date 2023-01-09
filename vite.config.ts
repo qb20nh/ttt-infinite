@@ -1,8 +1,7 @@
-import { defineConfig } from 'vite'
 import path from 'path'
-import { VitePWA } from 'vite-plugin-pwa'
-import { tauri } from 'vite-plugin-tauri' // 1. import the plugin
+import { defineConfig } from 'vite'
 import VitePluginBrowserSync from 'vite-plugin-browser-sync'
+import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   base: './',
@@ -17,8 +16,8 @@ export default defineConfig({
   },
   plugins: [
     VitePWA(),
-    VitePluginBrowserSync(),
-    ...(process.env.GITHUB_ACTIONS === undefined ? [tauri()] : [])
+    VitePluginBrowserSync()
+    // ,...(process.env.GITHUB_ACTIONS === undefined ? [tauri()] : [])
   ],
 
   // 3. optional but recommended
