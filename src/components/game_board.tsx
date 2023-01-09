@@ -91,6 +91,7 @@ export const GameBoard = component(
         }
         .cell:empty {
           border-width: .5px;
+          background: var(--bg);
         }
         .cell:empty:before {
           content: '';
@@ -99,7 +100,7 @@ export const GameBoard = component(
           height: 100%;
           border-radius: 2px;
 
-          --bg: #e0e0e0;
+          --bg: #e0e0e088;
           background: var(--bg);
         }
         .cell.active:not(:where(.filled, .won)) > .cell:empty,
@@ -108,13 +109,19 @@ export const GameBoard = component(
         }
         .cell.active:not(:where(.filled, .won)) > .cell:empty:before,
         .cell.active .cell:not(:where(.filled, .won)) .cell:empty:before {
-          --bg: #ff8;
+          --bg: #ff08;
         }
         .cell.won.O:empty:before {
-          --bg: #f88 !important;
+          --bg: #f008 !important;
+        }
+        .cell.won.O {
+          --bg: #f004 !important;
         }
         .cell.won.X:empty:before {
-          --bg: #88f !important;
+          --bg: #00f8 !important;
+        }
+        .cell.won.X {
+          --bg: #00f4 !important;
         }
         `}
     </style>
