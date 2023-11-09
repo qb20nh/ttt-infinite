@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/qb20nh/ttt-infinite/compare/v1.0.0...v1.0.1) (2023-11-09)
+
+
+### Bug Fixes
+
+* :green_heart: test html-liquid polyglot on pages build ([ad269d8](https://github.com/qb20nh/ttt-infinite/commit/ad269d8220bf621457b9de0217957f7ba9a3ea8b))
+* Resolves [#18](https://github.com/qb20nh/ttt-infinite/issues/18) ([df5ca99](https://github.com/qb20nh/ttt-infinite/commit/df5ca990e29a59bdca7eed90f308de399bd79f07))
+
 ## 1.0.0 (2023-01-02)
 
 
