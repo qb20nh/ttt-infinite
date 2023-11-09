@@ -13,17 +13,17 @@ const id = 'board'
 const boardElement = (
   <div id={id}>
     {
-    (() => {
-      gameState.board.startTurn(player.o)
-      return (function draw () {
-        const renderer = new BoardRenderer(gameState.board)
-        gameState.board.setRenderCallback(() => {
-          q<HTMLDivElement>(`#${id}`)?.replaceChildren(draw())
-        })
-        return renderer.render<CommonElement>()
+      (() => {
+        gameState.board.startTurn(player.o)
+        return (function draw() {
+          const renderer = new BoardRenderer(gameState.board)
+          gameState.board.setRenderCallback(() => {
+            q<HTMLDivElement>(`#${id}`)?.replaceChildren(draw())
+          })
+          return renderer.render<CommonElement>()
+        })()
       })()
-    })()
-}
+    }
   </div>
 )
 
@@ -37,6 +37,20 @@ export const GameBoard = component(
       {`
         *, *:before, *:after {
           box-sizing: border-box;
+        }
+
+        html {
+          height: 100%;
+        }
+        body {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+        }
+        h1 {
+          position: absolute;
+          transform: translate(0, calc(-100% - 1em));
         }
 
         #board {
@@ -70,17 +84,19 @@ export const GameBoard = component(
           --bg: #e0e0e0;
           background: var(--bg);
         }
-        .cell.active .cell:empty {
+        .cell.active :not(.won) .cell:empty,
+        .cell.active:not(.won)>.cell:empty {
           cursor: pointer;
         }
-        .cell.active .cell:empty:before {
+        .cell.active :not(.won) .cell:empty:before,
+        .cell.active:not(.won)>.cell:empty:before {
           --bg: #ff8;
         }
         .cell.won.O:empty:before {
-          --bg: #f88;
+          --bg: #f88 !important;
         }
         .cell.won.X:empty:before {
-          --bg: #88f;
+          --bg: #88f !important;
         }
         `}
     </style>
